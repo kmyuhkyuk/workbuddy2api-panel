@@ -10,12 +10,7 @@ RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/wb2api ./cmd/serve
  && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/login ./cmd/login \
  && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/credit ./cmd/credit
 
-FROM alpine:3.20
-# python3：login.sh 的 JSON 解析 / 签到 / 落盘；bash：shell 脚本体。
-RUN apk add --no-cache wget ca-certificates tzdata python3 bash \
- && adduser -D -u 10001 app \
- && mkdir -p /app/auths /app/data \
- && chown -R app:app /app
+FROM kmyuhkyuk/workbuddy2api-panel-base-alpine:latest
 WORKDIR /app
 # 脚本置入 + 去 CRLF（Windows 检出可能性）在切到 app 之前以 root 完成——
 # app 对 root 所有文件无写权限，sed -i 需要写权限。
